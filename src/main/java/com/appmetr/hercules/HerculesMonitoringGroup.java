@@ -1,5 +1,8 @@
 package com.appmetr.hercules;
 
+import java.util.Collections;
+import java.util.Map;
+
 public interface HerculesMonitoringGroup {
     public static final String HERCULES_EM = "hercules.em";
     public static final String HERCULES_WM = "hercules.wm";
@@ -9,3 +12,4 @@ public interface HerculesMonitoringGroup {
     public static final String EM_WIDE = "em.wide";
     public static final String EM_PARTITION = "em.partition";
 }
+

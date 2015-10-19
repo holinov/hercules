@@ -125,7 +125,7 @@ public class IndexManager {
             new BatchExecutor<Object, Object>(
                     getEntityClassBatchIterator(metadata.getEntityClass()),
                     new BatchProcessor<Object>() {
-                        @Override public void processBatch(List batch) {
+                        public void processBatch(List batch) {
                             for (Object entity : batch) {
                                 final Object primaryKey = entityManager.getPrimaryKey(entity, metadata);
                                 valuesToInsert.put(primaryKey, new byte[0]);
@@ -162,7 +162,7 @@ public class IndexManager {
         new BatchExecutor<Object, Object>(
                 getEntityClassBatchIterator(metadata.getEntityClass()),
                 new BatchProcessor<Object>() {
-                    @Override public void processBatch(List batch) {
+                    public void processBatch(List batch) {
                         for (Object entity : batch) {
 
                             Object primaryKey = entityManager.getPrimaryKey(entity, metadata);

@@ -2,6 +2,7 @@ package com.appmetr.hercules.driver;
 
 import com.appmetr.hercules.Hercules;
 import com.appmetr.hercules.HerculesMonitoringGroup;
+import com.appmetr.hercules.HerculesMonitoringUtils;
 import com.appmetr.hercules.driver.serializer.RowSerializer;
 import com.appmetr.hercules.profile.DataOperationsProfile;
 import com.appmetr.hercules.serializers.EnumSerializer;
@@ -145,7 +146,7 @@ public class ThriftDataDriver implements DataDriver {
         rangeSlicesQuery.setReturnKeysOnly();
 
         QueryResult<OrderedRows<R, T, ByteBuffer>> result;
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get row count " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get row count", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         try {
             result = rangeSlicesQuery.execute();
@@ -169,7 +170,7 @@ public class ThriftDataDriver implements DataDriver {
         query.setRange(from, to, getBoundedTopCount(count));
 
         QueryResult<Integer> result;
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get top count " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get top count", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         try {
             result = query.execute();
@@ -227,7 +228,7 @@ public class ThriftDataDriver implements DataDriver {
         sliceDataSpecificator.fillMultigetSliceQuery(multigetSliceQuery);
 
         QueryResult<Rows<R, T, ByteBuffer>> result;
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get slice " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get slice", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         try {
             result = multigetSliceQuery.execute();
@@ -258,7 +259,7 @@ public class ThriftDataDriver implements DataDriver {
         sliceDataSpecificator.fillRangeSliceQuery(rangeSlicesQuery);
 
         QueryResult<OrderedRows<R, T, ByteBuffer>> result;
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get range slice " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get range slice", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         try {
             result = rangeSlicesQuery.execute();
@@ -287,7 +288,7 @@ public class ThriftDataDriver implements DataDriver {
         query.setReturnKeysOnly();
 
         QueryResult<OrderedRows<R, T, ByteBuffer>> result;
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get key range " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Get key range", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         try {
             result = query.execute();
@@ -322,7 +323,7 @@ public class ThriftDataDriver implements DataDriver {
 
         Mutator<ByteBuffer> mutator = HFactory.createMutator(keyspace, ByteBufferSerializer.get());
 
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Insert " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Insert" , HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         int serializedDataSize = 0;
         try {
@@ -445,7 +446,7 @@ public class ThriftDataDriver implements DataDriver {
     }
 
     private void executeMutator(String columnFamily, DataOperationsProfile dataOperationsProfile, Mutator<ByteBuffer> mutator, int serializedDataSize) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Insert " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Insert", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
         try {
             mutator.execute();
         } finally {
@@ -462,7 +463,7 @@ public class ThriftDataDriver implements DataDriver {
     public <R, T> void delete(Keyspace keyspace, String columnFamily, DataOperationsProfile dataOperationsProfile, RowSerializer<R, T> rowSerializer, R rowKey) {
         Mutator<R> mutator = HFactory.createMutator(keyspace, rowSerializer.getRowKeySerializer());
 
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Delete " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Delete", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
         try {
             mutator.delete(rowKey, columnFamily, null, rowSerializer.getTopKeySerializer());
         } finally {
@@ -485,7 +486,7 @@ public class ThriftDataDriver implements DataDriver {
         for (T topKey : topKeys) {
             mutator.addDeletion(serializedRowKey, columnFamily, topKey, rowSerializer.getTopKeySerializer());
         }
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Delete " + columnFamily);
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_DD, "Delete", HerculesMonitoringUtils.makeParams("columnFamily",columnFamily));
 
         try {
             mutator.execute();

@@ -3,6 +3,7 @@ package com.appmetr.hercules.manager;
 import com.appmetr.hercules.FieldFilter;
 import com.appmetr.hercules.Hercules;
 import com.appmetr.hercules.HerculesMonitoringGroup;
+import com.appmetr.hercules.HerculesMonitoringUtils;
 import com.appmetr.hercules.annotations.Id;
 import com.appmetr.hercules.driver.DataDriver;
 import com.appmetr.hercules.driver.HerculesMultiQueryResult;
@@ -59,7 +60,7 @@ public class EntityManager {
     public <E, K> E get(Class<E> clazz, K primaryKey, DataOperationsProfile dataOperationsProfile) {
         if (primaryKey == null) return null;
 
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get by PK " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get by PK",HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -83,7 +84,7 @@ public class EntityManager {
     }
 
     public <E, K> List<E> get(Class<E> clazz, Iterable<K> primaryKeys, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get list by PK " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get list by PK",HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -108,7 +109,7 @@ public class EntityManager {
     }
 
     public <E, K> List<K> getKeyRange(Class<E> clazz, K from, K to, Integer count, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get key range " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get key range", HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -124,7 +125,7 @@ public class EntityManager {
     }
 
     public <E, K> Tuple2<List<E>, K> getRange(Class<E> clazz, K from, K to, Integer count, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get range " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get range", HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -172,7 +173,7 @@ public class EntityManager {
     }
 
     public <E> int getCountByFK(Class<E> clazz, ForeignKey foreignKey, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get count by FK " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get count by FK", HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -216,7 +217,7 @@ public class EntityManager {
     }
 
     private <E, K> void save(K primaryKey, E entity, FieldFilter fieldFilter, Integer ttl, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Save " + entity.getClass().getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Save", HerculesMonitoringUtils.makeParams("class", entity.getClass().getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(entity.getClass());
@@ -276,7 +277,7 @@ public class EntityManager {
     public <E> void delete(E entity, DataOperationsProfile dataOperationsProfile) {
         if (entity == null) return;
 
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Delete " + entity.getClass().getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Delete", HerculesMonitoringUtils.makeParams("class", entity.getClass().getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(entity.getClass());
@@ -384,7 +385,7 @@ public class EntityManager {
 
     //private level
     private <E, K> List<E> getAllPlain(Class<E> clazz, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get all plain " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get all plain", HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -411,7 +412,7 @@ public class EntityManager {
     }
 
     private <E, K> List<E> getAllByIndex(Class<E> clazz, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get all by index " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get all by index", HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -451,7 +452,7 @@ public class EntityManager {
     }
 
     private <E, K> List<E> getByFK(Class<E> clazz, ForeignKey foreignKey, Integer count, DataOperationsProfile dataOperationsProfile) {
-        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get list by FK " + clazz.getSimpleName());
+        StopWatch monitor = monitoring.start(HerculesMonitoringGroup.HERCULES_EM, "Get list by FK", HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
 
         try {
             EntityMetadata metadata = getMetadata(clazz);
@@ -586,7 +587,7 @@ public class EntityManager {
     }
 
     private <E> E throwConvertError(Class<E> clazz, Map<String, Object> values, Exception e) {
-        monitoring.inc(HerculesMonitoringGroup.HERCULES_EM, "Error converting map to " + clazz.getName());
+        monitoring.inc(HerculesMonitoringGroup.HERCULES_EM, "Error converting map to" , HerculesMonitoringUtils.makeParams("class", clazz.getSimpleName()));
         String descr = "Failed to convert map to " + clazz.getName() + " Values Map: " + values.toString();
         throw new RuntimeException(descr, e);
     }
